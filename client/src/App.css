@@ -1,0 +1,407 @@
+/* client/src/App.css */
+* { box-sizing: border-box; }
+
+/* 1. 기본 설정 */
+body, html { 
+  margin: 0; 
+  padding: 0; 
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden; 
+  overflow-y: auto;   
+  scroll-behavior: smooth; 
+  font-family: 'Helvetica', sans-serif; 
+}
+
+.animate-fade-in { animation: fadeIn 0.8s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* 2. 전체 컨테이너 */
+.full-page-container {
+  width: 100%;
+  min-height: 100vh; 
+  height: auto;      
+  overflow: visible; 
+  position: relative;
+}
+
+/* --- 1. 메인 화면 (인트로) --- */
+.intro-wrapper {
+  position: relative;
+  width: 100vw; 
+  height: 100vh; 
+  background-color: #000; 
+  overflow: hidden; 
+  cursor: none; /* 기본 커서 숨김 */
+}
+
+/* 캔버스 */
+.intro-canvas { 
+  display: block; 
+  width: 100%; 
+  height: 100%; 
+  background-color: #000; 
+}
+
+/* ✨ 커스텀 커서 (붉은 글로우) */
+.intro-custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 50px; /* 커서 크기 조절 (필요하면 변경) */
+  height: auto;
+  pointer-events: none; /* 클릭 통과 */
+  transform: translate(-50%, -50%); /* 중앙 정렬 */
+  z-index: 9999;
+  mix-blend-mode: screen; /* 배경과 자연스럽게 섞임 (선택사항) */
+}
+
+/* --- 2. 다이어리 화면 --- */
+.diary-section { 
+  width: 100%; 
+  min-height: 100vh; 
+  height: auto; 
+  background-color: #e8e8e5; 
+  padding: 40px 15px 100px 15px; 
+  font-family: 'Helvetica', 'Arial', sans-serif; 
+  color: #222; 
+  display: flex; 
+  justify-content: center; 
+  overflow: visible; 
+}
+
+.calendar-layout { 
+  height: auto; 
+  display: flex; 
+  flex-direction: column; 
+  width: 100%; 
+  max-width: 1200px; 
+}
+
+.calendar-header { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: flex-start; 
+  margin-top: 85px; 
+  margin-bottom: 30px; 
+}
+
+/* 연도 영역 */
+.year-wrapper { 
+  height: 10rem; 
+  overflow: hidden; 
+  cursor: ns-resize; 
+  position: relative; 
+}
+
+.big-year { 
+  font-family: 'Helvetica', 'Arial', sans-serif; 
+  font-size: 11rem; 
+  font-weight: 900; 
+  line-height: 0.8; 
+  margin: 0; 
+  letter-spacing: -6px; 
+  user-select: none; 
+  transform: translateY(0); 
+}
+.year-wrapper:hover .big-year { opacity: 0.8; }
+
+.right-header-group { display: flex; flex-direction: column; align-items: flex-end; gap: 15px; }
+.playlist-link { font-size: 1.5rem; font-weight: 900; margin: 0; cursor: pointer; transition: color 0.2s; }
+.playlist-link:hover { color: #ff2d55; }
+
+.recent-list-container.scroll-container { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 8px; 
+  text-align: right; 
+  font-size: 0.75rem; 
+  color: #555; 
+  max-height: 200px; 
+  overflow-y: auto; 
+  padding-right: 5px; 
+}
+
+.recent-item { display: flex; justify-content: flex-end; gap: 10px; white-space: nowrap; cursor: pointer; transition: opacity 0.2s; }
+.recent-item:hover { opacity: 0.7; }
+.recent-title { font-weight: bold; }
+.recent-artist { color: #888; }
+.empty-message { text-align: right; color: #888; font-style: italic; }
+
+.calendar-grid { 
+  flex: 1; 
+  display: flex; 
+  justify-content: center; 
+  gap: 10px; 
+  padding-top: 10px; 
+  border-top: none; 
+  align-items: flex-start; 
+}
+
+.month-column { 
+  width: 50px; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  transition: margin-top 0.5s ease; 
+}
+
+.month-header { 
+  transform: rotate(-90deg); 
+  text-transform: uppercase; 
+  font-size: 0.8rem; 
+  font-weight: bold; 
+  letter-spacing: 1px; 
+  color: #444; 
+  height: 90px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: flex-start; 
+  white-space: nowrap; 
+  margin-bottom: 10px; 
+}
+
+.days-wrapper { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 4px; 
+  height: auto; 
+  overflow: visible; 
+  padding-bottom: 20px; 
+}
+
+.day-number { font-size: 0.8rem; color: #888; text-align: center; font-family: 'Courier New', monospace; cursor: pointer; transition: all 0.2s; }
+.day-number:hover { color: #000; font-weight: bold; transform: scale(1.2); }
+.day-number.has-entry { font-weight: 900; color: #000; font-size: 1.1rem; text-decoration: none; }
+
+/* --- 3. 플레이어 화면 --- */
+.playlist-section { width: 100vw; height: 100vh; background-color: #f5f5f5; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; padding: 0; }
+.playlist-container { width: 100%; max-width: 400px; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 40px 20px; }
+.playlist-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.nav-btn { background: none; border: none; font-size: 1.5rem; color: #333; cursor: pointer; padding: 5px; }
+.nav-title { font-family: 'Times New Roman', serif; font-size: 1.8rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: opacity 0.2s; }
+.nav-title:hover { opacity: 0.6; }
+.player-main-content { flex: 1; display: flex; justify-content: center; align-items: center; }
+.current-art-container { width: 280px; height: 280px; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15); background: #ddd; }
+.current-art { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); }
+.current-art-placeholder { width: 280px; height: 280px; border-radius: 20px; background: #ddd; display: flex; align-items: center; justify-content: center; color: #888; }
+.song-info-large { text-align: left; margin-bottom: 30px; padding: 0 5%; }
+.song-title-large { font-size: 1.8rem; font-weight: 800; margin: 0 0 5px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.artist-name-large { font-size: 1.2rem; color: #666; margin: 0; }
+.player-controls-area { width: 100%; padding-bottom: 20px; }
+.progress-container { margin-bottom: 30px; }
+.progress-bar { width: 100%; height: 3px; background: #ccc; position: relative; border-radius: 2px; }
+.progress-current { height: 100%; background: #000; position: absolute; left: 0; top: 0; }
+.progress-knob { width: 14px; height: 14px; background: #fff; border: 2px solid #000; border-radius: 50%; position: absolute; top: 50%; transform: translate(-50%, -50%); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+.time-info { display: flex; justify-content: space-between; font-size: 0.7rem; color: #888; margin-top: 8px; font-weight: 600; }
+.controls-container { display: flex; justify-content: center; gap: 40px; align-items: center; margin-bottom: 40px; }
+.controls-container .control-btn { background: none; border: none; cursor: pointer; padding: 0; display: flex; align-items: center; transition: opacity 0.2s; }
+.controls-container .control-btn:hover { opacity: 0.6; }
+.controls-container .play-pause-btn { width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; background: #000 !important; border-radius: 50%; border: none !important; box-shadow: 0 8px 20px rgba(0,0,0,0.3); margin-left: 0; cursor: pointer; transition: transform 0.2s; }
+.controls-container .play-pause-btn:hover { transform: scale(1.05); }
+.controls-container .play-pause-btn:active { transform: scale(0.95); }
+.controls-container .play-pause-btn svg { width: 32px; height: 32px; }
+.controls-container .play-pause-btn svg path { fill: white !important; stroke: white !important; stroke-width: 0 !important; }
+.controls-container .control-btn svg { width: 35px; height: 35px; }
+.controls-container .control-btn svg path { stroke: black !important; stroke-width: 2px !important; fill: none !important; }
+.volume-section { width: 100%; display: flex; align-items: flex-end; justify-content: space-between; padding: 0 10px; height: 120px; }
+.vol-label { font-size: 0.75rem; font-weight: 800; color: #333; margin-bottom: 10px; }
+.volume-arc-wrapper { flex: 1; height: 100%; position: relative; display: flex; justify-content: center; align-items: flex-end; }
+.volume-dots { position: relative; width: 200px; height: 100px; }
+.v-dot { position: absolute; bottom: 0; left: 50%; width: 12px; height: 12px; background-color: #fff; border: 2px solid #000; border-radius: 50%; transform-origin: 50% 150px; }
+.v-dot:nth-child(1) { transform: translateX(-50%) rotate(-45deg) translateY(-140px); }
+.v-dot:nth-child(2) { transform: translateX(-50%) rotate(-35deg) translateY(-140px); }
+.v-dot:nth-child(3) { transform: translateX(-50%) rotate(-25deg) translateY(-140px); }
+.v-dot:nth-child(4) { transform: translateX(-50%) rotate(-15deg) translateY(-140px); }
+.v-dot:nth-child(5) { transform: translateX(-50%) rotate(-5deg) translateY(-140px); }
+.v-dot:nth-child(6) { transform: translateX(-50%) rotate(5deg) translateY(-140px); }
+.v-dot:nth-child(7) { transform: translateX(-50%) rotate(15deg) translateY(-140px); }
+.v-dot:nth-child(8) { transform: translateX(-50%) rotate(25deg) translateY(-140px); }
+.v-dot:nth-child(9) { transform: translateX(-50%) rotate(35deg) translateY(-140px); }
+.v-dot:nth-child(10) { transform: translateX(-50%) rotate(45deg) translateY(-140px); }
+.v-dot.active { background-color: #ff2d5f !important; border-color: #ff2d5f !important; width: 16px; height: 16px; z-index: 10; }
+
+/* 오버레이 */
+.playlist-overlay { position: fixed; bottom: -100%; left: 0; width: 100%; height: 85vh; background-color: #f2f2f2; border-top-left-radius: 20px; border-top-right-radius: 20px; box-shadow: 0 -10px 40px rgba(0,0,0,0.2); transition: bottom 0.5s cubic-bezier(0.25, 1, 0.5, 1); z-index: 1000; display: flex; flex-direction: column; align-items: center; padding-top: 20px; }
+.playlist-overlay.open { bottom: 0; }
+.drawer-header { width: 100%; display: flex; justify-content: center; margin-bottom: 10px; cursor: pointer; }
+.drawer-handle { width: 50px; height: 5px; background: #ccc; border-radius: 3px; }
+.folder-stack { width: 90%; max-width: 400px; display: flex; flex-direction: column; align-items: center; overflow-y: auto; padding-bottom: 50px; padding-top: 40px; }
+.folder-item { width: 100%; height: 75px; border: 1px solid #999; border-radius: 6px 6px 0 0; margin-top: 15px; position: relative; box-shadow: 0 4px 6px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.2s; background-color: #f9f9f9; }
+.folder-item:hover { transform: translateY(-5px); }
+.folder-tab { position: absolute; top: -26px; height: 27px; padding: 5px 15px; font-size: 0.75rem; font-weight: bold; color: #333; background-color: #f9f9f9; border: 1px solid #999; border-bottom: none; clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%); width: 30%; text-align: center; text-transform: uppercase; }
+.folder-tab.left { left: 0; }
+.folder-tab.center { left: 35%; }
+.folder-tab.right { right: 0; left: auto; }
+.folder-item.month-folder { background-color: #ddd; margin-bottom: 10px; }
+.folder-tab.black-tab { background-color: #000; color: #fff; border-color: #000; left: 0; width: 35%; }
+.folder-content { padding: 25px 20px; display: flex; justify-content: space-between; align-items: center; font-size: 1rem; }
+.folder-song { font-weight: 800; color: #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 60%; }
+.folder-artist { font-size: 0.85rem; color: #666; font-weight: 500; }
+.drawer-bottom-label { margin-top: auto; margin-bottom: 20px; background: #ffeaa7; padding: 5px 20px; border: 1px solid #333; border-radius: 4px; font-weight: bold; font-size: 0.8rem; letter-spacing: 1px; }
+
+/* --- 4. 꾸미기 화면 --- */
+.editor-section { width: 100vw; height: 100vh; position: relative; background-color: #fff; display: flex; flex-direction: column; }
+.editor-nav { height: 50px; background: #333; color: white; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 100; }
+.back-to-cal-btn { background: none; border: 1px solid #777; color: #fff; padding: 5px 15px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; transition: background 0.2s; }
+.back-to-cal-btn:hover { background: #555; }
+.editor-date-title { font-weight: bold; letter-spacing: 1px; }
+.app-container { display: flex; height: 100%; position: relative; overflow: hidden; }
+.diary-canvas { width: 100%; height: 100%; position: relative; }
+
+/* --- FAB 및 메뉴 --- */
+.fab-container { position: absolute; bottom: 30px; right: 30px; display: flex; flex-direction: column; align-items: flex-end; z-index: 2000; }
+.fab-main-btn { width: 60px; height: 60px; border-radius: 50%; background-color: #000; color: #fff; font-size: 30px; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease; }
+.fab-main-btn.open { transform: rotate(45deg); }
+.fab-menu { margin-bottom: 15px; display: flex; flex-direction: column; gap: 10px; align-items: flex-end; animation: slideUp 0.3s ease-out; }
+.fab-item { background: #fff; padding: 10px 15px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); cursor: pointer; display: flex; align-items: center; gap: 10px; transition: transform 0.2s; }
+.fab-item:hover { transform: scale(1.05); }
+.fab-item.column { flex-direction: column; align-items: stretch; width: 250px; }
+.fab-label { font-weight: bold; font-size: 0.9rem; color: #333; }
+
+/* 음악 검색 스타일 */
+.search-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.fab-search { display: flex; gap: 5px; flex: 1; margin-left: 10px; }
+.fab-search input { flex: 1; padding: 5px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.8rem; }
+.go-btn { background: #000; color: white; border: none; border-radius: 4px; padding: 0 10px; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
+.fab-results { max-height: 200px; overflow-y: auto; border-top: 1px solid #eee; margin-top: 5px; }
+.search-result-row { display: flex; align-items: center; padding: 8px 5px; border-bottom: 1px solid #f0f0f0; cursor: default; }
+.search-result-row:hover { background: #f9f9f9; }
+.search-result-row img { width: 36px; height: 36px; border-radius: 4px; margin-right: 10px; border: 1px solid #eee; object-fit: cover; }
+.s-info { flex: 1; overflow: hidden; display: flex; flex-direction: column; justify-content: center; }
+.s-title { font-size: 0.8rem; font-weight: bold; color: #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
+.s-artist { font-size: 0.7rem; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.add-song-btn { width: 30px; height: 30px; border-radius: 8px; background: #000; color: white; border: none; font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; margin-left: 5px; font-weight: bold; }
+.add-song-btn:hover { background: #333; }
+
+/* --- 상세 속성 편집창 --- */
+.property-panel { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 10px 15px; display: flex; gap: 12px; align-items: center; box-shadow: 0 5px 20px rgba(0,0,0,0.15); z-index: 1900; }
+.prop-row { display: flex; align-items: center; gap: 5px; }
+.prop-row label { font-size: 0.8rem; font-weight: bold; color: #666; }
+.prop-row input { padding: 5px; border: 1px solid #ddd; border-radius: 4px; width: 60px; text-align: center; font-size: 0.8rem; }
+.prop-row input[type="color"] { width: 30px; height: 30px; padding: 0; }
+
+/* 폰트 선택기 */
+.font-picker { position: relative; }
+.font-picker button { padding: 5px 10px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer; min-width: 100px; text-align: left; font-size: 0.8rem; }
+.font-list { position: absolute; bottom: 100%; left: 0; width: 150px; max-height: 200px; overflow-y: auto; background: white; border: 1px solid #ddd; border-radius: 4px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); z-index: 2000; margin-bottom: 5px; }
+.font-item { padding: 8px 10px; font-size: 0.9rem; cursor: pointer; border-bottom: 1px solid #f5f5f5; }
+.font-item:hover { background: #f0f0f0; }
+
+/* --- 아이템 스타일 --- */
+.draggable-item { cursor: grab; position: absolute; z-index: 10; padding: 0; }
+.draggable-item:active { cursor: grabbing; }
+.delete-x-btn { position: absolute; top: -10px; right: -10px; width: 24px; height: 24px; background: #000; color: #fff; border: 2px solid #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; z-index: 200; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+
+/* ✨ 노래 제목 (Wallpoet) */
+.song-text-title {
+    font-family: 'Wallpoet', cursive;
+    font-size: 30px;
+    font-weight: bold;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+/* ✨ 시간 표시 (디지털 느낌) */
+.time-display-widget {
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: default;
+    white-space: nowrap;
+}
+
+/* ✨ 플레이어 위젯 스타일 */
+.player-widget-item {
+    width: 100%; height: 100%;
+    display: flex; justify-content: center; align-items: center;
+    gap: 20px;
+    background: transparent;
+}
+.pw-icon { cursor: pointer; transition: opacity 0.2s; }
+.pw-icon:hover { opacity: 0.7; }
+.pw-icon.small { width: 30px; height: 30px; }
+.pw-icon.big { width: 50px; height: 50px; }
+
+/* ✨ 영수증 스타일 (단순화) */
+.receipt-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+.receipt-wrapper.grayscale { filter: grayscale(100%); }
+
+.receipt-base-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    pointer-events: none;
+}
+
+.receipt-simple-box {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-height: 70%;
+    overflow-y: auto;
+    background-color: transparent;
+    padding: 10px;
+    color: #000;
+}
+
+.r-simple-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.r-simple-item {
+    border-bottom: 1px dashed #ccc;
+    padding-bottom: 5px;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+}
+
+/* 왼쪽 정보 그룹 */
+.r-item-left {
+    display: flex;
+    flex-direction: column;
+}
+
+.r-simple-title {
+    font-weight: bold;
+    font-size: 1rem;
+    font-family: 'Economica', sans-serif;
+}
+
+.r-simple-artist {
+    font-size: 0.8rem;
+    color: #555;
+    font-family: 'Economica', sans-serif;
+}
+.r-empty-simple {
+    text-align: center;
+    color: #777;
+    font-style: italic;
+    font-family: 'Helvetica', sans-serif;
+}
+
+/* ✨ 영수증 내 삭제 버튼 */
+.r-delete-btn {
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #999;
+    padding: 0 5px;
+    font-weight: bold;
+    transition: color 0.2s;
+}
+.r-delete-btn:hover {
+    color: red;
+}
+
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.spinning-infinite { animation: spin 4s linear infinite; }
+
+@keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
