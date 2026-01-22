@@ -6,7 +6,7 @@ import './App.css';
 import posterImg from './poster.png'; 
 import coverImg from './cover.png';   
 import receiptImg from './receipt_europe.png'; 
-// ✨ [중요] 이름을 변경한 파티클용 이미지 (반드시 intro-bg.png로 파일명 변경 필요)
+// ✨ [중요] 배경용 이미지 (intro-bg.png가 있어야 합니다)
 import chevronImg from './intro-bg.png'; 
 // ✨ 인트로 전용 커서 이미지 (붉은 원)
 import cursorImg from './Group 115.png';
@@ -39,11 +39,9 @@ const ParticleIntro = ({ onEnter }) => {
     
     // 마우스 이벤트 핸들러
     const handleMouseMove = (e) => {
-      // 1. 파티클 물리연산용 좌표 업데이트
       mouseRef.current.x = e.clientX;
       mouseRef.current.y = e.clientY;
 
-      // 2. 커스텀 커서 이미지 위치 업데이트 (마우스 중앙에 오도록)
       if (cursorRef.current) {
         cursorRef.current.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
       }
@@ -68,8 +66,8 @@ const ParticleIntro = ({ onEnter }) => {
         this.color = 'white'; 
         this.vx = 0;
         this.vy = 0;
-        this.friction = 0.95; // 마찰력
-        this.ease = 0.1;      // 복원력
+        this.friction = 0.95; 
+        this.ease = 0.1;      
       }
 
       draw() {
@@ -108,13 +106,16 @@ const ParticleIntro = ({ onEnter }) => {
 
     // 이미지 로드 및 파티클 생성
     const image = new Image();
-    image.src = chevronImg; // 변경된 파일명으로 로드
+    image.src = chevronImg; 
 
     image.onload = () => {
-      // 이미지 비율 유지하며 캔버스 중앙에 배치
-      const scale = Math.min(canvas.width, canvas.height) / Math.max(image.width, image.height) * 0.6;
+      // ✨ [수정됨] 화면을 꽉 채우도록 비율 계산 (Cover 모드)
+      const scale = Math.max(canvas.width / image.width, canvas.height / image.height);
+      
       const imgWidth = image.width * scale;
       const imgHeight = image.height * scale;
+      
+      // 이미지를 정중앙에 배치
       const dx = (canvas.width - imgWidth) / 2;
       const dy = (canvas.height - imgHeight) / 2;
 
@@ -123,14 +124,15 @@ const ParticleIntro = ({ onEnter }) => {
       const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
       ctx.clearRect(0, 0, canvas.width, canvas.height); 
 
-      const gap = 4; 
+      // ✨ [수정됨] 입자 간격 (Gap) 설정
+      // 화면 전체를 채울 때는 입자가 너무 많아지므로 4 -> 12 정도로 늘려서 성능 최적화
+      const gap = 12; 
 
       for (let y = 0; y < canvas.height; y += gap) {
         for (let x = 0; x < canvas.width; x += gap) {
           const index = (y * 4 * pixels.width) + (x * 4);
           const alpha = pixels.data[index + 3]; 
           
-          // ✨ 투명도가 0보다 크면 무조건 입자로 생성 (물결 모양 강제 적용)
           if (alpha > 0) { 
             particlesArray.push(new Particle(x, y));
           }
@@ -164,7 +166,7 @@ const ParticleIntro = ({ onEnter }) => {
 
   return (
     <div className="intro-wrapper" onClick={onEnter} style={{ position: 'relative', width: '100vw', height: '100vh', backgroundColor: 'black', overflow: 'hidden' }}>
-        {/* ✨ 커스텀 커서 이미지 */}
+        {/* 커스텀 커서 */}
         <img 
             ref={cursorRef} 
             src={cursorImg} 
