@@ -6,9 +6,9 @@ import './App.css';
 import posterImg from './poster.png'; 
 import coverImg from './cover.png';   
 import receiptImg from './receipt_europe.png'; 
-// ✨ 파티클용 이미지 (형태를 만들 이미지)
-import chevronImg from './chevron-right.png'; 
-// ✨ [신규] 인트로 전용 커서 이미지 (붉은 원)
+// ✨ [중요] 이름을 변경한 파티클용 이미지 (반드시 intro-bg.png로 파일명 변경 필요)
+import chevronImg from './intro-bg.png'; 
+// ✨ 인트로 전용 커서 이미지 (붉은 원)
 import cursorImg from './Group 115.png';
 
 // 컨트롤러 아이콘
@@ -64,12 +64,12 @@ const ParticleIntro = ({ onEnter }) => {
         this.originY = y; 
         this.x = x; 
         this.y = y; 
-        this.size = 2; // 입자 크기 (살짝 키움)
+        this.size = 2; // 입자 크기
         this.color = 'white'; 
         this.vx = 0;
         this.vy = 0;
-        this.friction = 0.95; // 마찰력 (입자 감속)
-        this.ease = 0.1;      // 복원력 (원래 위치로 돌아가는 속도)
+        this.friction = 0.95; // 마찰력
+        this.ease = 0.1;      // 복원력
       }
 
       draw() {
@@ -80,28 +80,25 @@ const ParticleIntro = ({ onEnter }) => {
       update() {
         const dx = mouseRef.current.x - this.x;
         const dy = mouseRef.current.y - this.y;
-        const distanceSq = dx * dx + dy * dy; // 거리의 제곱 (성능 최적화)
-        const forceRadius = 15000; // 마우스 반응 반경
+        const distanceSq = dx * dx + dy * dy; 
+        const forceRadius = 15000; 
 
         if (distanceSq < forceRadius) { 
             const distance = Math.sqrt(distanceSq);
             const force = (Math.sqrt(forceRadius) - distance) / Math.sqrt(forceRadius);
             const angle = Math.atan2(dy, dx);
-            const push = 20; // 밀어내는 힘의 세기
+            const push = 20; 
             
             this.vx -= force * Math.cos(angle) * push;
             this.vy -= force * Math.sin(angle) * push;
         }
 
-        // 원래 위치로 돌아오려는 힘
         this.vx += (this.originX - this.x) * this.ease;
         this.vy += (this.originY - this.y) * this.ease;
         
-        // 마찰력 적용
         this.vx *= this.friction;
         this.vy *= this.friction;
         
-        // 위치 업데이트
         this.x += this.vx;
         this.y += this.vy;
 
@@ -111,7 +108,7 @@ const ParticleIntro = ({ onEnter }) => {
 
     // 이미지 로드 및 파티클 생성
     const image = new Image();
-    image.src = chevronImg; // 파티클로 변환할 이미지
+    image.src = chevronImg; // 변경된 파일명으로 로드
 
     image.onload = () => {
       // 이미지 비율 유지하며 캔버스 중앙에 배치
@@ -123,18 +120,17 @@ const ParticleIntro = ({ onEnter }) => {
 
       ctx.drawImage(image, dx, dy, imgWidth, imgHeight);
       
-      // 픽셀 데이터 가져오기
       const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      ctx.clearRect(0, 0, canvas.width, canvas.height); // 캔버스 초기화
+      ctx.clearRect(0, 0, canvas.width, canvas.height); 
 
-      const gap = 4; // 입자 간격 (작을수록 고해상도, 성능 주의)
+      const gap = 4; 
 
       for (let y = 0; y < canvas.height; y += gap) {
         for (let x = 0; x < canvas.width; x += gap) {
           const index = (y * 4 * pixels.width) + (x * 4);
-          const alpha = pixels.data[index + 3]; // 투명도값
+          const alpha = pixels.data[index + 3]; 
           
-          // ✨ [수정됨] 투명도가 0보다 크면 무조건 입자로 생성 (색상/밝기 상관없이 형태 유지)
+          // ✨ 투명도가 0보다 크면 무조건 입자로 생성 (물결 모양 강제 적용)
           if (alpha > 0) { 
             particlesArray.push(new Particle(x, y));
           }
@@ -156,7 +152,6 @@ const ParticleIntro = ({ onEnter }) => {
     const handleResize = () => {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        // 리사이즈 시 파티클 재생성은 복잡하므로 여기선 생략하거나 새로고침 유도
     };
     window.addEventListener('resize', handleResize);
 
@@ -169,7 +164,7 @@ const ParticleIntro = ({ onEnter }) => {
 
   return (
     <div className="intro-wrapper" onClick={onEnter} style={{ position: 'relative', width: '100vw', height: '100vh', backgroundColor: 'black', overflow: 'hidden' }}>
-        {/* ✨ 커스텀 커서 이미지 (JS로 위치 제어) */}
+        {/* ✨ 커스텀 커서 이미지 */}
         <img 
             ref={cursorRef} 
             src={cursorImg} 
@@ -178,11 +173,11 @@ const ParticleIntro = ({ onEnter }) => {
                 position: 'fixed',
                 top: 0,
                 left: 0,
-                width: '50px', /* 크기는 필요하면 조절하세요 */
-                pointerEvents: 'none', // 클릭 통과
+                width: '50px', 
+                pointerEvents: 'none', 
                 zIndex: 9999,
-                mixBlendMode: 'screen', // 붉은 글로우 효과를 위해 (선택사항)
-                willChange: 'transform' // 성능 최적화
+                mixBlendMode: 'screen', 
+                willChange: 'transform' 
             }}
         />
         <canvas 
@@ -190,11 +185,9 @@ const ParticleIntro = ({ onEnter }) => {
             className="intro-canvas"
             style={{ 
                 display: 'block',
-                cursor: 'none' /* 캔버스 위에서 기본 커서 숨김 */ 
+                cursor: 'none' 
             }} 
         />
-        {/* 안내 문구 (필요시 주석 해제) */}
-        {/* <div style={{position:'absolute', bottom:'50px', width:'100%', textAlign:'center', color:'white', pointerEvents:'none', opacity:0.5}}>Click anywhere to enter</div> */}
     </div>
   );
 };
