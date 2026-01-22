@@ -126,7 +126,7 @@ const ParticleIntro = ({ onEnter }) => {
 
       // ✨ [수정됨] 입자 간격 (Gap) 설정
       // 화면 전체를 채울 때는 입자가 너무 많아지므로 4 -> 12 정도로 늘려서 성능 최적화
-      const gap = 12; 
+      const gap = 4; 
 
       for (let y = 0; y < canvas.height; y += gap) {
         for (let x = 0; x < canvas.width; x += gap) {
